@@ -4,6 +4,7 @@
 __pycache__/
 
 instance/
+!instance/.gitkeep
 
 .pytest_cache/
 .coverage
@@ -15,3 +16,5 @@ build/
 
 .vscode/
 
+migrations/*
+!migrations/.gitkeep
