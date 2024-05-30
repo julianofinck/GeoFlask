@@ -7,4 +7,4 @@ ping_bp = Blueprint('ping', __name__)
 
 @ping_bp.route("/ping", methods=['GET'])
 def hello():
-    return "Pong!"
+    return "pong"
