@@ -1,0 +1,1 @@
+"conftest.py" is a configuration file that will always run before the tests. Here, it creates the app.
