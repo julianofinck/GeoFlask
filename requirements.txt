@@ -1,0 +1,10 @@
+flask
+psycopg2-binary
+flask-cors
+Flask-SQLAlchemy
+Flask-Migrate
+geopandas
+GeoAlchemy2
+python-dotenv
+pytest 
+pytest-flask
