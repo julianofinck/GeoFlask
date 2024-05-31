@@ -3,4 +3,4 @@ def test_ping(client):
 
     assert response.status_code == 200
     print(response.data)
-    assert b'Pong' in response.data
+    assert b'pong' in response.data

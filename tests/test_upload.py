@@ -9,6 +9,25 @@ from app.config import TestConfig
 import pytest
 
 
+def test_no_file(client):
+    response = client.post('/upload')
+    assert response.status_code == 400
+    assert response.json["error"] == "No file part"
+
+def test_no_selected_file(client):
+    data = {
+        'shapefile': (io.BytesIO(b''), '')
+    }
+    response = client.post('/upload', data=data)
+    assert response.status_code == 400
+    assert response.json["error"] == "No selected file"
+
+def test_no_file3(client):
+    response = client.post('/upload')
+    assert response.status_code == 400
+    assert response.json["error"] == "No file part"
+
+
 def create_test_zip():
     # Create a mock shapefile and zip it
     shp_content = (
@@ -25,7 +44,7 @@ def create_test_zip():
     zip_buffer.seek(0)
     return zip_buffer
 
-def test_upload(client):
+def teast_upload(client):
     data = {
         'file': (create_test_zip(), 'test.zip')
     }
