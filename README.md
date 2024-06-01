@@ -38,7 +38,7 @@ Or make sure to ignore in the `migrations/env.py` objects that are "idx_%_geom" 
 Run tests with `pytest --cov=app tests/ -v`
 
 
-# Run flask
+## Run flask
 flask --app app run --debug
 
 ### Database
