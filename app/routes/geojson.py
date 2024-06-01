@@ -1,5 +1,6 @@
+import shapely
 from flask import Blueprint, jsonify
-from ..models import GeoData  # Import the GeoData model
+from ..models import GeoData # get the name of all models
 
 geojson_bp = Blueprint('geojson', __name__)
 
@@ -12,13 +13,12 @@ def geojson():
     features = []
 
     for data in geodata_objects:
-        print(data.properties)
         feature = {
             "type": "Feature",
             # Adjust as per your model structure
             "properties": data.properties,  
             # Assuming you already have the geometry in GeoJSON format
-            "geometry": data.geojson  
+            "geometry": shapely.geometry.mapping(shapely.from_wkb(str(data.geom)))
         }
         features.append(feature)
 

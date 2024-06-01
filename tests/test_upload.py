@@ -1,3 +1,5 @@
+# curl -X POST -F 'file=@tests/shp.zip' http://127.0.0.1:5000/api/upload
+
 # pip install pytest-cov
 import os
 import zipfile
@@ -9,7 +11,7 @@ from app.config import TestConfig
 import pytest
 
 
-def test_no_file(client):
+def test_validation_no_file(client):
     response = client.post('/upload')
     assert response.status_code == 400
     assert response.json["error"] == "No file part"

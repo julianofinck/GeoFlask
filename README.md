@@ -1,27 +1,13 @@
 # Backend
 This flask app reads layers in database, serve geojsons and allow updating to the database. The chosen database is a PostgreSQL+PostGIS.
 
+To `Flask-Migrate` properly work with `geoalchemy2`, always define the geometry column with name **geom**
+
 |Route|Function|
 |---|---|
 |ping| returns "pong"|
 |upload|insert new geojson|
 |query-geojson| returns geojson|
-
-query must return
-```js
-var geojsonFeature = {
-    "type": "Feature",
-    "properties": {
-        "name": "Coors Field",
-        "amenity": "Baseball Stadium",
-        "popupContent": "This is where the Rockies play!"
-    },
-    "geometry": {
-        "type": "Point",
-        "coordinates": [-104.99404, 39.75621]
-    }
-};
-```
 
 ## Tests
 Run tests with `pytest tests/`
@@ -33,8 +19,13 @@ flask --app app run --debug
 ### Database
 #### Database - install DB in WSL
 ```bash
+# Start from scratch without any conflict
+sudo apt-get --purge remove postgresql postgresql-common postgresql-client postgresql-contrib postgis
+sudo apt-get autoremove
+
+# Install
 sudo apt update
-sudo apt install postgis
+sudo apt-get install  postgresql postgresql-contrib postgis 
 
 # Check status
 sudo service postgresql status
@@ -47,40 +38,67 @@ Create the database
 ```SQL
 -- Create DATABASE with postgis and SUPERUSER
 CREATE DATABASE myapp;
-CREATE EXTENSION postgis;
-CREATE ROLE myuser WITH LOGIN PASSWORD 'password';
+CREATE ROLE myuser WITH LOGIN PASSWORD 'password' SUPERUSER;
 GRANT ALL PRIVILEGES ON DATABASE myapp TO myuser;
+
+\c myapp
+CREATE EXTENSION postgis;
 ```
-#### Database - First migration
-Start the database.
-The "migration" folder must be empty.
-Open the container terminal and type the following
+## Flask-Migrate
+On the first migration, run
 ```bash
-# Remove any existing migrations file
+# Init fladk db from scratch
 rm -r migrations/*
-
-# Initialize db
 flask db init
-
-# Alembic requires custom types to be
-#  included in. Column from geoalchemy2
-#  is such a type.
-#
-# Edit "migrations/script.py.mako" and 
-#  add "import geoalchemy2". This way
-#  alembic will always have it added to
-#  migration scripts:
-
-(...)
+```
+Edit `migrations/script.py.mako` by adding `import geoalchemy2` to tell Alembic you have geoalchemy2 geometry columns
+```py
+# ...
 from alembic import op
 import sqlalchemy as sa
 import geoalchemy2
 ${imports if imports else ""}
-(...)
+# ...
+```
+Edit `migrations/env.py` to ignore postgis tables
+```py
+def get_metadata():
+# ...
 
+def include_object(object, name, type_, reflected, compare_to):    
+    if type_ == "table" and name == 'spatial_ref_sys':
+        return False
+    else:
+        return True
+
+
+def run_migrations_offline():
+    # ...
+    context.configure(
+        # ...
+        include_object=include_object       # <--- HERE
+        )
+    # ...
+
+def run_migrations_online():
+    # ...
+    with connectable.connect() as connection:
+        context.configure(
+            # ...
+            include_object=include_object
+        )
+```
+
+```bash
 # Choose your .env names wise.
 # flask overwrites "DATABASE_HOSTNAME"
 flask db migrate -m "Initial migration."
 flask db upgrade
 ```
 [About Alembic and custom types](https://stackoverflow.com/questions/39215278/alembic-migration-for-geoalchemy2-raises-nameerror-name-geoalchemy2-is-not-de)
+
+
+# ERRORS
+I learned there is an error when using SQLAlchemy + geoalchemy2 together. They both create spatial index differently and end up creating it twice. A way to overcome it is to set geoalchemy2.Geometry columns with spatial_index=False set spatial indexes explicitly.
+
+Other way is to ignore in the migrations/env.py objects that are "idx_%_geom" but this imply having all your geometry columns named the same.
