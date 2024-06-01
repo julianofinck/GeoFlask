@@ -17,29 +17,32 @@ upload_bp = Blueprint("upload", __name__)
 @upload_bp.route("/upload", methods=["POST"])
 @cross_origin()
 def upload_file():
+    # Validate request
     result = validate(request)
     if isinstance(result, tuple):
         return result
     else:
         gdf = result
 
-    # Get it as GeoJSON
-    geojson_data = gdf.to_json()
-
     # Save GeoJSON data to PostgreSQL
     for _, row in gdf.iterrows():
-        geom_wkt = row.geometry.wkt
+        geom_wkt = row.geometry.wkt  # geoalchemy2 reads from wkt
         properties = row.drop("geometry").to_dict()
-        # geoalchemy2 reads from wkt
         geodata = GeoData(properties=properties, geom=geom_wkt)
         db.session.add(geodata)
 
     db.session.commit()
 
-    return jsonify({"success": "File uploaded and processed successfully"}), 200
+    return (
+        jsonify(
+            {"message": "Success! File uploaded, processed and inserted in database"}
+        ),
+        200,
+    )
 
 
 def validate(request):
+    # Shapefile part in data of request
     if "shapefile" not in request.files:
         return jsonify({"error": "No shapefile part in data of POST request"}), 400
 

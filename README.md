@@ -16,7 +16,7 @@ To `Flask-Migrate` properly work with `geoalchemy2`, always define the geometry 
 |query-geojson| returns geojson|
 
 ## Tests
-Run tests with `pytest tests/`
+Run tests with `pytest --cov=app tests/ -v`
 
 
 # Run flask

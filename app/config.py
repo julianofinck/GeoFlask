@@ -26,12 +26,16 @@ class Config:
 
 
 class TestConfig(Config):
-    def __init__(self):
-        self.TESTING = True
-        self.SQLALCHEMY_DATABASE_URI = (
-            "sqlite://"  # /:memory:'  # In-memory SQLite database for testing
-        )
-        self.create_test_database()
+    # Database configuration
+    DB_ENGINE = os.getenv("DB_ENGINE")
+    DB_USERNAME = os.getenv("FLASK_TEST_DB_USERNAME")
+    DB_HOSTNAME = os.getenv("FLASK_TEST_DB_HOSTNAME")
+    DB_NAME = os.getenv("FLASK_TEST_DB_NAME")
+    DB_PASSWORD = os.getenv("FLASK_TEST_DB_PASSWORD")
+    DB_PORT = os.getenv("FLASK_TEST_DB_PORT")
 
-    def __del__(self):
-        self.delete_test_database()
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = (
+        f"{DB_ENGINE}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_NAME}"
+    )
+    ENV = "development"

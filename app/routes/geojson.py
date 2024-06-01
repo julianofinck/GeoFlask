@@ -1,3 +1,4 @@
+import geopandas as gpd
 import shapely
 from flask import Blueprint, jsonify
 
@@ -10,6 +11,14 @@ geojson_bp = Blueprint("geojson", __name__)
 def geojson():
     # Fetch geodata from the GeoData model
     geodata_objects = GeoData.query.all()
+
+    # Geodata objects to GeoDataFrame
+    gdf = gpd.GeoDataFrame(geodata_objects)
+
+    # Convert GeoData objects to GeoJSON format
+    # ...
+    # Get it as GeoJSON
+    geojson_data = gdf.to_json()
 
     # Convert geodata objects to GeoJSON format
     features = []
