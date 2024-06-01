@@ -1,4 +1,10 @@
 # Backend
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![ArcGIS Pro 3.2.2](https://img.shields.io/badge/argispro-v3.2.2-blue) 
+![ArcPy v.3.2](https://img.shields.io/badge/arcpy-v3.2=py39_arcgispro_49743-blue)
+![Python 3.9.18](https://img.shields.io/badge/python-v3.9.18-yellow) 
+![WindowsOS](https://img.shields.io/badge/windowsOS--black)
+
 This flask app reads layers in database, serve geojsons and allow updating to the database. The chosen database is a PostgreSQL+PostGIS.
 
 To `Flask-Migrate` properly work with `geoalchemy2`, always define the geometry column with name **geom**
@@ -25,23 +31,22 @@ sudo apt-get autoremove
 
 # Install
 sudo apt update
-sudo apt-get install  postgresql postgresql-contrib postgis 
+sudo apt-get install postgresql postgresql-contrib postgis 
 
 # Check status
 sudo service postgresql status
 
 # Enter
-cp comando.sql /tmp/comando.sql
 sudo -u postgres psql -f comando.sql
 ```
 Create the database
 ```SQL
 -- Create DATABASE with postgis and SUPERUSER
-CREATE DATABASE myapp;
-CREATE ROLE myuser WITH LOGIN PASSWORD 'password' SUPERUSER;
-GRANT ALL PRIVILEGES ON DATABASE myapp TO myuser;
+CREATE DATABASE <FLASK_DB_NAME>;
+CREATE ROLE <FLASK_DB_USERNAME> WITH LOGIN PASSWORD <FLASK_DB_PASSWORD> SUPERUSER;
+GRANT ALL PRIVILEGES ON DATABASE <FLASK_DB_NAME> TO <FLASK_DB_USERNAME>;
 
-\c myapp
+\c <FLASK_DB_NAME>
 CREATE EXTENSION postgis;
 ```
 ## Flask-Migrate

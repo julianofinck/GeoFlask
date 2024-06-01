@@ -8,11 +8,13 @@ from ..extensions import db
 from ..models import GeoData
 import shutil
 import tempfile
+from flask_cors import cross_origin
 
 
 upload_bp = Blueprint('upload', __name__)
 
 @upload_bp.route('/upload', methods=['POST'])
+@cross_origin()
 def upload_file():
     result = validate(request)
     if isinstance(result, tuple):
