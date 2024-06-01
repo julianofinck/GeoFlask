@@ -1,8 +1,9 @@
 import os
+
 from dotenv import load_dotenv
 
+load_dotenv()
 
-load_dotenv() 
 
 class Config:
     # Database configuration
@@ -14,13 +15,18 @@ class Config:
     DB_PORT = os.getenv("DB_PORT")
 
     # SQLAlchemy database URI
-    SQLALCHEMY_DATABASE_URI = f"{DB_ENGINE}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_NAME}"
+    SQLALCHEMY_DATABASE_URI = (
+        f"{DB_ENGINE}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_NAME}"
+    )
 
     # Flask configuration
     DEBUG = True
     ENV = "development"  # "development" OR "production"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite://' #/:memory:'  # In-memory SQLite database for testing
+    SQLALCHEMY_DATABASE_URI = (
+        "sqlite://"  # /:memory:'  # In-memory SQLite database for testing
+    )
