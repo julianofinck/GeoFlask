@@ -110,7 +110,7 @@ class DatabaseForTesting:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        pass  # self.delete_test_database()
+        self.delete_test_database()
 
 
 if __name__ == "__main__":

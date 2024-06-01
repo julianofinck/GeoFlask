@@ -1,19 +1,38 @@
-# Backend
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-![ArcGIS Pro 3.2.2](https://img.shields.io/badge/argispro-v3.2.2-blue) 
-![ArcPy v.3.2](https://img.shields.io/badge/arcpy-v3.2=py39_arcgispro_49743-blue)
-![Python 3.9.18](https://img.shields.io/badge/python-v3.9.18-yellow) 
-![WindowsOS](https://img.shields.io/badge/windowsOS--black)
+# GeoFlask - Backend API
+[![Python 3.10.12](https://img.shields.io/badge/Python-v3.10.12-yellow)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-v1.1.2-brightgreen)](https://flask.palletsprojects.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14.12-blue)](https://www.postgresql.org/)
+[![PostGIS](https://img.shields.io/badge/PostGIS-v3.1-blue)](https://postgis.net/)
 
-This flask app reads layers in database, serve geojsons and allow updating to the database. The chosen database is a PostgreSQL+PostGIS.
 
-To `Flask-Migrate` properly work with `geoalchemy2`, always define the geometry column with name **geom**
+## Description
+
+A Flask app that uses PostgreSQL with PostGIS for geospatial data, providing endpoints for querying and uploading polygon GeoJSON data.
 
 |Route|Function|
 |---|---|
-|ping| returns "pong"|
-|upload|insert new geojson|
-|query-geojson| returns geojson|
+|`GET /ping`| returns "pong"|
+|`POST /upload`|insert new geojson|
+|`GET /geojson`| returns geojson|
+
+
+## Dependencies
+
+Python 3.10.12 and `requirements.txt`
+
+
+## Getting Started
+
+Lores ipsum
+
+### Flask-Migrate
+
+To `Flask-Migrate`'s **Alembic** properly work with **geoalchemy2** and **sqlachemy**, declare any geometry column with `spatial_index=False` and add the spatial_index explicitly.
+
+Or make sure to ignore in the `migrations/env.py` objects that are "idx_%_geom" but this imply having all your geometry columns named the same.
+
+
+
 
 ## Tests
 Run tests with `pytest --cov=app tests/ -v`
@@ -101,9 +120,3 @@ flask db migrate -m "Initial migration."
 flask db upgrade
 ```
 [About Alembic and custom types](https://stackoverflow.com/questions/39215278/alembic-migration-for-geoalchemy2-raises-nameerror-name-geoalchemy2-is-not-de)
-
-
-# ERRORS
-I learned there is an error when using SQLAlchemy + geoalchemy2 together. They both create spatial index differently and end up creating it twice. A way to overcome it is to set geoalchemy2.Geometry columns with spatial_index=False set spatial indexes explicitly.
-
-Other way is to ignore in the migrations/env.py objects that are "idx_%_geom" but this imply having all your geometry columns named the same.
