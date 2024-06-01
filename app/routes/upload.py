@@ -41,7 +41,7 @@ def upload_file():
 
 def validate(request):
     if "shapefile" not in request.files:
-        return jsonify({"error": "No file part"}), 400
+        return jsonify({"error": "No shapefile part in data of POST request"}), 400
 
     file = request.files["shapefile"]
 
@@ -76,7 +76,7 @@ def validate(request):
             shutil.rmtree(temp_dir)
             return jsonify({"error": "No .shp file found in the zip"}), 400
 
-        # Read .shp file and convert to GeoJSON
+        # Read .shp file to GeoDataFrame
         gdf = gpd.read_file(shp_path)
 
     # Check if it is POLYGON

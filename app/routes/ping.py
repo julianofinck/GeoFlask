@@ -1,8 +1,5 @@
 from flask import Blueprint
 
-from ..extensions import db
-from ..models import GeoData
-
 ping_bp = Blueprint("ping", __name__)
 
 

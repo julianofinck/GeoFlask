@@ -26,7 +26,12 @@ class Config:
 
 
 class TestConfig(Config):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = (
-        "sqlite://"  # /:memory:'  # In-memory SQLite database for testing
-    )
+    def __init__(self):
+        self.TESTING = True
+        self.SQLALCHEMY_DATABASE_URI = (
+            "sqlite://"  # /:memory:'  # In-memory SQLite database for testing
+        )
+        self.create_test_database()
+
+    def __del__(self):
+        self.delete_test_database()

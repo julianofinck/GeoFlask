@@ -7,9 +7,14 @@ from app.routes.geojson import geojson_bp
 from app.routes.ping import ping_bp
 from app.routes.upload import upload_bp
 
+from .database_test import DatabaseForTesting
+
 
 @pytest.fixture
 def app():
+    # Create test database
+    test_db = DatabaseForTesting()
+
     app = create_app(TestConfig)
 
     # With context because it must run when app is running
