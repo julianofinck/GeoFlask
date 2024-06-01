@@ -32,8 +32,6 @@ To `Flask-Migrate`'s **Alembic** properly work with **geoalchemy2** and **sqlach
 Or make sure to ignore in the `migrations/env.py` objects that are "idx_%_geom" but this imply having all your geometry columns named the same.
 
 
-
-
 ## Tests
 Run tests with `pytest --cov=app tests/ -v`
 
@@ -120,3 +118,8 @@ flask db migrate -m "Initial migration."
 flask db upgrade
 ```
 [About Alembic and custom types](https://stackoverflow.com/questions/39215278/alembic-migration-for-geoalchemy2-raises-nameerror-name-geoalchemy2-is-not-de)
+
+
+Why and what are the effect of?  
+scope=session (conftest)
+

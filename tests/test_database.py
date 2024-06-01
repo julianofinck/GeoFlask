@@ -15,6 +15,15 @@ class DatabaseForTesting:
         self.db_hostname = os.getenv("FLASK_TEST_DB_HOSTNAME", None)
         self.db_port = os.getenv("FLASK_TEST_DB_PORT", None)
 
+    def __enter__(self):
+        self.create_test_database()
+        print("db created")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # self.delete_test_database()
+        print("db deleted")
+
     def create_test_database(self):
         # Connect to PostgreSQL as postgres user
         conn = psycopg2.connect(
@@ -104,13 +113,6 @@ class DatabaseForTesting:
         conn.commit()
         cursor.close()
         conn.close()
-
-    def __enter__(self):
-        self.create_test_database()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.delete_test_database()
 
 
 if __name__ == "__main__":
